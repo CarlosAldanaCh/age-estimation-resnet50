@@ -205,3 +205,30 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+# Local datasets (do not commit)
+data/
+datasets/
+*.csv
+*.tsv
+
+# Images
+*.jpg
+*.jpeg
+*.png
+*.bmp
+*.tiff
+*.webp
+
+# Models / checkpoints
+models/
+checkpoints/
+*.h5
+*.keras
+saved_model/
+*.pb
+
+# Logs
+logs/
+runs/
+mlruns/
+wandb/
