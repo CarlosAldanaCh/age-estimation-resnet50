@@ -1,0 +1,51 @@
+project:
+  name: "age-prediction"
+  seed: 42
+  device: "gpu"
+  output_dir: "reports"
+
+data:
+  csv_path: "data/labels.csv"
+  images_dir: "data/images"
+  filename_col: "file_name"
+  target_col: "real_age"
+  image_size: [224, 224]
+  channels: 3
+  batch_size: 32
+  val_size: 0.15
+  test_size: 0.15
+  stratify_bins: 10
+  cache: false
+  prefetch: true
+
+model:
+  backbone: "ResNet50"
+  weights: "imagenet"
+  pooling: "avg"
+  dropout: 0.2
+  dense_units: 128
+  l2: 0.0
+
+train:
+  epochs_stage1: 8
+  epochs_stage2: 12
+  lr_stage1: 0.001
+  lr_stage2: 0.00005
+  fine_tune_N_last: 30
+  optimizer: "adam"
+  loss: "mae"
+  metrics: ["mae"]
+
+callbacks:
+  early_stopping_patience: 5
+  reduce_lr_patience: 2
+  reduce_lr_factor: 0.2
+  min_lr: 1.0e-7
+
+artifacts:
+  save_best: true
+  best_model_path: "models/best.keras"
+  history_path: "reports/metrics/history.csv"
+  metrics_path: "reports/metrics/test_metrics.json"
+  pred_dump_path: "reports/metrics/test_predictions.csv"
+  figures_dir: "reports/figures"
