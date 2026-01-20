@@ -1,0 +1,13 @@
+{
+  "stage": "baseline_feature_extraction",
+  "test_mae": 9.046701431274414,
+  "image_size": [
+    224,
+    224
+  ],
+  "batch_size": 32,
+  "lr_stage1": 0.001,
+  "dropout": 0.2,
+  "dense_units": 128,
+  "seed": 42
+}

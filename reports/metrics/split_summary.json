@@ -1,0 +1,9 @@
+{
+  "train_rows": 5313,
+  "val_rows": 1139,
+  "test_rows": 1139,
+  "columns": [
+    "file_name",
+    "real_age"
+  ]
+}
