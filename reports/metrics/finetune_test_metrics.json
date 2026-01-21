@@ -1,0 +1,13 @@
+{
+  "stage": "finetune",
+  "test_mae": 7.064752101898193,
+  "image_size": [
+    224,
+    224
+  ],
+  "batch_size": 32,
+  "lr_stage2": 5e-05,
+  "epochs_stage2": 12,
+  "fine_tune_n_last": 30,
+  "seed": 42
+}
