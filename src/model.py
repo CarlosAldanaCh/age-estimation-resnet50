@@ -38,3 +38,32 @@ def build_resnet50_regressor(
     model = tf.keras.Model(inputs, outputs, name="resnet50_age_regressor")
 
     return model
+
+
+def set_fine_tuning(
+    model,
+    backbone_name: str = "resnet50",
+    fine_tune_n_last: int = 30,
+    freeze_batchnorm: bool = True,
+) -> None:
+    """
+    Sets the model for fine tuning mode, unfreezing n last backbone layers,
+    Optional but very recommended freeze BatchNorm for stability
+    """
+
+    backbone = model.get_layer(backbone_name)
+    backbone.trainable = True
+
+    # Freeze everything and then unfreeze N last
+
+    for layer in backbone.layers:
+        layer.trainable = False
+
+    if fine_tune_n_last > 1:
+        for layer in backbone.layers[-fine_tune_n_last:]:
+            layer.trainable = True
+
+    if freeze_batchnorm:
+        for layer in backbone.layers:
+            if isinstance(layer, tf.keras.layers.BatchNormalization):
+                layer.trainable = False

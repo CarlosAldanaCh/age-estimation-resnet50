@@ -86,3 +86,61 @@ def save_test_metrics(metrics: dict, out_dir: Path | str) -> None:
 
     out_dir.parent.mkdir(parents=True, exist_ok=True)
     out_dir.write_text(json.dumps(metrics, indent=2), encoding="utf-8")
+
+
+def make_finetune_callbacks(
+    *, models_dir: Path, metrics_dir: Path, monitor: str = "val_mae"
+) -> list:
+    """
+    Fine-tuning callbacks (checkpoint and separate logs)
+    """
+
+    models_dir.mkdir(parents=True, exist_ok=True)
+    metrics_dir.mkdir(parents=True, exist_ok=True)
+
+    return [
+        tf.keras.callbacks.ModelCheckpoint(
+            filepath=str(models_dir / "finetune_best.keras"),
+            monitor=monitor,
+            mode="min",
+            save_best_only=True,
+            verbose=1,
+        ),
+        tf.keras.callbacks.EarlyStopping(
+            monitor=monitor,
+            mode="min",
+            patience=4,
+            restore_best_weights=True,
+            verbose=True,
+        ),
+        tf.keras.callbacks.ReduceLROnPlateau(
+            monitor=monitor,
+            mode="min",
+            factor=0.5,
+            patience=2,
+            min_lr=1e-7,
+            verbose=1,
+        ),
+        tf.keras.callbacks.CSVLogger(
+            filename=str(metrics_dir / "finetune_history.csv")
+        ),
+    ]
+
+
+def train_stage_2(
+    model: tf.keras.Model,
+    train_ds: tf.data.Dataset,
+    val_ds: tf.data.Dataset,
+    *,
+    epochs: int,
+    callbacks: list,
+) -> tf.keras.callbacks.History:
+    """
+    Train fine-tuning (backbone partially trainable)
+    """
+    return model.fit(
+        train_ds,
+        validation_data=val_ds,
+        epochs=epochs,
+        callbacks=callbacks,
+    )
