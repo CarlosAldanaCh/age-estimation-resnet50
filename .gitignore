@@ -232,3 +232,8 @@ logs/
 runs/
 mlruns/
 wandb/
+
+# Reports: track figures (lightweight), ignore everything else if needed
+reports/figures/*
+!reports/figures/.gitkeep
+!reports/figures/*.png
